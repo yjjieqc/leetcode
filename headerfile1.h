@@ -104,6 +104,33 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 	return head;
 }
 
+// 16. 3Sum Closest
+int threeSumClosest(int* nums, int numsSize, int target) {
+	qsort(nums, numsSize, sizeof(int), cmp);
+	int i = 0;
+	int sum, result;
+	if (numsSize>2)
+		result = nums[0] + nums[1] + nums[2];
+	for (i = 0; i < numsSize - 2; i++) {
+		int head = i + 1;
+		int tail = numsSize - 1;
+		while (head < tail) {
+			sum = nums[i] + nums[tail] + nums[head];
+			result = fabs(result - target) < fabs(sum - target) ? result : sum;
+			int error = sum - target;
+			if (error == 0)
+				return sum;
+			else if (error > 0) {
+				tail--;
+			}
+			else if (error < 0) {
+				head++;
+			}
+		}
+	}
+	return result;
+}
+
 // 24. Swap Nodes in Pairs
 struct ListNode* swapPairs(struct ListNode* head) {
 	struct ListNode * current, *behind, *front;
