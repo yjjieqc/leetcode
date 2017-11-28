@@ -8,7 +8,7 @@
 
 // 118. Pascal's Triangle
 int** generate(int numRows, int** columnSizes) {
-	int ** result = (int **)malloc(sizeof(int*)*numRows);
+	int ** result = (int **)malloc(sizeof(int *) * numRows);
 	int * columnSizesArray = (int *)calloc(numRows,sizeof(int));
 	int i = 0;
 	while (i < numRows) {

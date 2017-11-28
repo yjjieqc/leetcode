@@ -27,6 +27,27 @@ struct ListNode {
 //	return head;s
 //}
 
+// 209. Minimum Size Subarray Sum
+int minSubArrayLen(int s, int* nums, int numsSize) {
+	int sum = 0, count = 0, i = 0, j = 0;
+	if (numsSize == 0)
+		return 0;
+	else
+		sum += nums[0];
+	while (j<numsSize) {
+		if (sum >= s) {
+			count = (count == 0 || count > j - i + 1) ? j - i + 1 : count;
+			sum -= nums[i];
+			i++;
+		}
+		else {
+			j++;
+			sum += nums[j];
+		}
+	}
+	return count;
+}
+
 // 234. Palindrome Linked List
 bool isPalindrome(struct ListNode* head) {
 	struct ListNode *fast = head, *slow = head;

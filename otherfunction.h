@@ -29,3 +29,7 @@ void quick_sort(int *nums, int begin, int end) {
 int cmp(const void *a, const void *b) {
 	return *(int *)a - *(int *)b;
 }
+
+int rcmp(const void *a, const void *b) {
+	return *(int *)b - *(int *)a;
+}

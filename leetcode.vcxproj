@@ -68,6 +68,7 @@
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headerfile4.h" />
     <ClInclude Include="headerfile5.h" />
     <ClInclude Include="headerfile1.h" />
     <ClInclude Include="headerfile2.h" />
