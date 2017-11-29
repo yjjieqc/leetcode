@@ -464,6 +464,29 @@ int** permuteUnique(int* nums, int numsSize, int* returnSize) {
 	return result;
 }
 
+// 60. Permutation Sequence
+char* getPermutation(int n, int k) {
+	int * nums = (int *)malloc(sizeof(int)*n);
+	char * result = (char *)malloc(sizeof(char)*(n + 1));
+	result[n] = '\0';
+	for (int i = 0; i < n; i++)
+		nums[i] = i + 1;
+	int j = 0;
+	k--;
+	while (n > 0) {
+		n--;
+		int val = cal_factorial(n);
+		int index = k / val;
+		k = k % val;
+		result[j++] = ((char)nums[index] + '0');
+		if (index != n)
+			for (int p = index; p< n; p++)//使用memmove消耗更多时间
+				nums[p] = nums[p + 1];
+	}
+	free(nums);
+	return result;
+}
+
 // 66. Plus One
 /**
 * Return an array of size *returnSize.
