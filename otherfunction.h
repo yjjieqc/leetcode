@@ -33,3 +33,10 @@ int cmp(const void *a, const void *b) {
 int rcmp(const void *a, const void *b) {
 	return *(int *)b - *(int *)a;
 }
+
+int factorial(int a) {
+	if (a == 0 || a == 1)
+		return 1;
+	else
+		return factorial(a - 1)*a;
+}
