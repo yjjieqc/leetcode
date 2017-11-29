@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include "otherfunction.h"
 
 #define true 1
 
@@ -138,6 +139,33 @@ int** fourSum(int* nums, int numsSize, int target, int* returnSize) {
 	return result;
 }
 
+// 16. 3Sum Closest
+int threeSumClosest(int* nums, int numsSize, int target) {
+	qsort(nums, numsSize, sizeof(int), cmp);
+	int i = 0;
+	int sum, result;
+	if (numsSize>2)
+		result = nums[0] + nums[1] + nums[2];
+	for (i = 0; i < numsSize - 2; i++) {
+		int head = i + 1;
+		int tail = numsSize - 1;
+		while (head < tail) {
+			sum = nums[i] + nums[tail] + nums[head];
+			result = fabs(result - target) < fabs(sum - target) ? result : sum;
+			int error = sum - target;
+			if (error == 0)
+				return sum;
+			else if (error > 0) {
+				tail--;
+			}
+			else if (error < 0) {
+				head++;
+			}
+		}
+	}
+	return result;
+}
+
 //19 Remove Nth Node From End of List
 struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 	/*struct ListNode * front,*prev;
@@ -171,33 +199,6 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 	}
 	*t1 = (*t1)->next;
 	return head;
-}
-
-// 16. 3Sum Closest
-int threeSumClosest(int* nums, int numsSize, int target) {
-	qsort(nums, numsSize, sizeof(int), cmp);
-	int i = 0;
-	int sum, result;
-	if (numsSize>2)
-		result = nums[0] + nums[1] + nums[2];
-	for (i = 0; i < numsSize - 2; i++) {
-		int head = i + 1;
-		int tail = numsSize - 1;
-		while (head < tail) {
-			sum = nums[i] + nums[tail] + nums[head];
-			result = fabs(result - target) < fabs(sum - target) ? result : sum;
-			int error = sum - target;
-			if (error == 0)
-				return sum;
-			else if (error > 0) {
-				tail--;
-			}
-			else if (error < 0) {
-				head++;
-			}
-		}
-	}
-	return result;
 }
 
 // 24. Swap Nodes in Pairs
@@ -309,6 +310,26 @@ int removeElement(int* nums, int numsSize, int val) {
 	return index1;
 }
 
+// 31. Next Permutation
+void nextPermutation(int* nums, int numsSize) {
+	int j = numsSize - 1;
+	for (; j > 0; j--) {
+		if (nums[j - 1] < nums[j]) {
+			int k = j;
+			while (nums[j - 1] < nums[k] && k < numsSize)
+				k++;
+			k -= 1;
+			int temp = nums[j - 1];
+			nums[j - 1] = nums[k];
+			nums[k] = temp;
+			qsort(nums + j, numsSize - j, sizeof(int), cmp);
+			return;
+		}
+	}
+	qsort(nums, numsSize, sizeof(int), cmp);
+	return;
+}
+
 //int majorityElement1(int* nums, int numsSize) {
 //	int major = nums[0], count = 1;
 //	for (int i = 1; i<numsSize; i++) {
@@ -373,6 +394,74 @@ int jump(int* nums, int numsSize) {
 		num_step++;
 	}
 	return num_step;
+}
+
+// 46. Permutations
+int** permute(int* nums, int numsSize, int* returnSize) {
+	qsort(nums, numsSize, sizeof(int), cmp);
+	int size = 1, i = 1;
+	while (i <= numsSize)
+		size *= i++;
+	int **result = (int **)malloc(sizeof(int *)*size);
+	result[0] = (int *)malloc(sizeof(int)*numsSize);
+	memcpy(result[0], nums, sizeof(int)*numsSize);
+	i = 1;
+	while (i < size) {
+		result[i] = (int *)malloc(sizeof(int)* numsSize);
+		memcpy(result[i], result[i - 1], sizeof(int)*numsSize);
+		int j = numsSize - 1;
+		for (; j > 0; j--) {
+			if (result[i][j - 1] < result[i][j]) {
+				int k = j;
+				while (result[i][j - 1] < result[i][k] && k < numsSize)
+					k++;
+				k -= 1;
+				int temp = result[i][j - 1];
+				result[i][j - 1] = result[i][k];
+				result[i][k] = temp;
+				qsort(result[i] + j, numsSize - j, sizeof(int), cmp);
+				break;
+			}
+		}
+		i++;
+	}
+	*returnSize = size;
+	return result;
+}
+
+// 47. Permutations II
+int** permuteUnique(int* nums, int numsSize, int* returnSize) {
+	qsort(nums, numsSize, sizeof(int), cmp);
+	*returnSize = 0;
+	int size = 1, i = 1;
+	while (i <= numsSize)
+		size *= i++;
+	int **result = (int **)malloc(sizeof(int *)*size);
+	result[0] = (int *)malloc(sizeof(int)*numsSize);
+	memcpy(result[0], nums, sizeof(int)*numsSize);
+	i = 1;
+	while (i < size) {
+		result[i] = (int *)malloc(sizeof(int)* numsSize);
+		memcpy(result[i], result[i - 1], sizeof(int)*numsSize);
+		int j = numsSize - 1;
+		for (; j > 0; j--) {
+			if (result[i][j - 1] < result[i][j]) {
+				int k = j;
+				while (result[i][j - 1] < result[i][k] && k < numsSize)
+					k++;
+				k -= 1;
+				int temp = result[i][j - 1];
+				result[i][j - 1] = result[i][k];
+				result[i][k] = temp;
+				qsort(result[i] + j, numsSize - j, sizeof(int), cmp);
+				(*returnSize) += 1;
+				break;
+			}
+		}
+		i++;
+	}
+	*returnSize = size;
+	return result;
 }
 
 // 66. Plus One

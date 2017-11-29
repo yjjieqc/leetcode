@@ -10,6 +10,9 @@
 //#include "headerfile7.h"
 #define debug 1
 
+int cmp(const void *a, const void *b) {
+	return *(int *)a - *(int *)b;
+}
 
 // 31. Next Permutation
 void nextPermutation(int* nums, int numsSize) {
@@ -23,17 +26,25 @@ void nextPermutation(int* nums, int numsSize) {
 			int temp = nums[j - 1];
 			nums[j - 1] = nums[k];
 			nums[k] = temp;
-
+			qsort(nums + j, numsSize - j, sizeof(int), rcmp);
+			return;
 		}
 	}
+	qsort(nums, numsSize, sizeof(int), cmp);
+	return;
 }
+
+
+
+
+// 60. Permutation Sequence
 
 int main()
 {
-	int num[] = { -4,-3,-2,-1,0,0,1,2,3,4 };
-	int c = 0;
+	int num[] = { 1,2,3 };
+	int c = 53;
 	int d = 0;
-	int **b = fourSum(num, 10, c, &d);
+	int **b = permute(num, 3, &d);
 #if debug
 	printf("%d\n", d);
 	for (int i = 0; i < d; i++) {
