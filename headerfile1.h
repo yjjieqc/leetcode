@@ -330,6 +330,18 @@ void nextPermutation(int* nums, int numsSize) {
 	return;
 }
 
+// 33. Search in Rotated Sorted Array
+int search(int* nums, int numsSize, int target) {
+	int i = 0;
+	while (i<numsSize) {
+		if (nums[i] != target)
+			i++;
+		else
+			return i;
+	}
+	return -1;
+}
+
 //int majorityElement1(int* nums, int numsSize) {
 //	int major = nums[0], count = 1;
 //	for (int i = 1; i<numsSize; i++) {
@@ -362,7 +374,7 @@ void nextPermutation(int* nums, int numsSize) {
 
 //42. Trapping Rain Water
 int trap(int* height, int heightSize) {
-	int left = 0, right = height - 1;
+	int left = 0, right = *height - 1;
 	int level = 0;
 	int water = 0;
 	int lower = 0;

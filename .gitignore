@@ -2,7 +2,7 @@
 bin/
 obj/
 readme/
-leetcode.vcxproj
-leetcode.vcxproj.user
-leetcode
-leetcode.sln
+Debug/
+*.vcxproj
+*.vcxproj.*
+*.sln
