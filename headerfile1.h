@@ -166,7 +166,7 @@ int threeSumClosest(int* nums, int numsSize, int target) {
 	return result;
 }
 
-//19 Remove Nth Node From End of List
+// 19 Remove Nth Node From End of List
 struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 	/*struct ListNode * front,*prev;
 	front = head;
@@ -296,7 +296,7 @@ int removeDuplicates(int* nums, int numsSize) {
 	return index1 + 1;
 }
 
-//27. Remove Element
+// 27. Remove Element
 int removeElement(int* nums, int numsSize, int val) {
 	int index1 = 0;
 	int index2 = 0;
@@ -340,6 +340,62 @@ int search(int* nums, int numsSize, int target) {
 			return i;
 	}
 	return -1;
+}
+
+// 34. Search for a Range
+int* searchRange(int* nums, int numsSize, int target, int* returnSize) {
+	*returnSize = 2;
+	int *result = (int*)calloc(2, sizeof(int));
+	result[0] = result[1] = -1;
+	int left = 0;
+	int right = numsSize - 1;
+	int m, flag;
+	if (numsSize == 0)
+		return result;
+	while (left <= right)
+	{
+		m = (left + right) / 2;
+		if (left == right)
+			break;
+		if (nums[m] < target)
+			left = m + 1;
+		else
+			right = m;
+	}
+	if (target == nums[m])
+		result[0] = m;
+	else
+		return result;
+	for (left = m, right = numsSize - 1; left <= right;)
+	{
+		m = (left + right) / 2;
+		flag = (left + right) % 2;
+		if (flag)
+			++m;
+		if (left == right)
+			break;
+		if (nums[m] > target)
+			right = m - 1;
+		else
+			left = m;
+	}
+	result[1] = m;
+	return result;
+}
+
+// 35. Search Insert Position
+int searchInsert(int* nums, int numsSize, int target) {
+	int left = 0, right = numsSize - 1;
+	while (left <= right) {
+		int mid = (left + right) / 2;
+		if (nums[mid] > target)
+			right = mid - 1;
+		else if (nums[mid] < target)
+			left = mid + 1;
+		else
+			return mid;
+	}
+	return left;
 }
 
 //int majorityElement1(int* nums, int numsSize) {
@@ -474,6 +530,41 @@ int** permuteUnique(int* nums, int numsSize, int* returnSize) {
 	}
 	*returnSize = size;
 	return result;
+}
+
+// 48. Rotate Image
+void rotate(int** matrix, int matrixRowSize, int matrixColSize) {
+	int i, j, init;
+	if (matrixRowSize % 2) {
+		i = matrixRowSize / 2;
+		j = init = i + 1;
+	}
+	else {
+		i = matrixRowSize / 2 - 1;
+		j = init = matrixRowSize / 2;
+	}
+	for (; i >= 0; i--) {
+		for (j = init; j < matrixColSize; j++) {
+			if (i == j)
+				continue;
+			int temp = matrix[i][j];
+			matrix[i][j] = matrix[matrixRowSize - 1 - j][i];
+			matrix[matrixRowSize - 1 - j][i] = matrix[matrixRowSize - 1 - i][matrixRowSize - 1 - j];
+			matrix[matrixRowSize - 1 - i][matrixRowSize - 1 - j] = matrix[j][matrixRowSize - 1 - i];
+			matrix[j][matrixRowSize - 1 - i] = temp;
+		}
+	}
+}
+
+// 53. Maximum Subarray
+int maxSubArray(int* nums, int numsSize) {
+	int max = 0, sum = 0;
+	for (int i = 0; i < numsSize; i++) {
+		sum += nums[i];
+		max = max > sum ? max : sum;
+		sum = sum > 0 ? sum : 0;
+	}
+	return max;
 }
 
 // 60. Permutation Sequence
