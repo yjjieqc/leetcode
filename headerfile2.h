@@ -62,6 +62,40 @@ struct RandomListNode {
 	struct RandomListNode *random;	
 };
 
+// 121. Best Time to Buy and Sell Stock
+int maxProfit(int* prices, int pricesSize) {
+	int buy = prices[0], profit = 0;
+	for (int p = 1; p < pricesSize; p++) {
+		if (prices[p] < buy)
+			buy = prices[p];
+		profit = (prices[p] - buy) > profit ? prices[p] - buy : profit;
+	}
+	return profit;
+}
+
+// 122. Best Time to Buy and Sell Stock II
+int maxProfit(int* prices, int pricesSize) {
+	int max = 0;
+	for (int i = 1; i < pricesSize - 1; i++) {
+		if (prices[i] - prices[i - 1] > 0)
+			max += prices[i] - prices[i - 1];
+	}
+	return max;
+}
+
+// 123. Best Time to Buy and Sell Stock III
+int maxProfit(int* prices, int pricesSize) {
+	int hold1 = INT_MIN, hold2 = INT_MIN;
+	int max1 = 0, max2 = 0;
+	for (int i = 0; i < pricesSize; i++) {
+		max2 = max(max2, hold2 + prices[i]);
+		hold2 = max(hold2, max1 - prices[i]);
+		max1 = max(max1, hold1 + prices[i]);
+		hold1 = max(hold1, -prices[i]);
+	}
+	return max2;
+}
+
 // 138. Copy List with Random Pointer
 struct RandomListNode *copyRandomList(struct RandomListNode *head) {
 	struct RandomListNode * copyhead = (struct RandomListNode*)malloc(sizeof(struct RandomListNode));
@@ -110,4 +144,50 @@ struct RandomListNode *copyRandomList(struct RandomListNode *head) {
 		}
 	}
 	return copyhead;
+}
+
+// 152. Maximum Product Subarray
+int maxProduct(int* nums, int numsSize) {
+	int r = nums[0];
+	for (int i = 1, imax = r, imin = r; i < numsSize; i++) {
+		if (nums[i] < 0) {
+			int temp = imin;
+			imin = imax;
+			imax = temp;
+		}
+		imax = max(nums[i], imax * nums[i]);
+		imin = min(nums[i], imin * nums[i]);
+		r = max(r, imax);
+	}
+	return r;
+}
+
+// 188. Best Time to Buy and Sell Stock IV
+int maxProfit(int k, int* prices, int pricesSize) {
+	if (k > pricesSize / 2) {
+		int result = 0;
+		for (int i = 1; i < pricesSize; ++i)
+			result += max(prices[i] - prices[i - 1], 0);
+		return result;
+	}
+	int * profit = (int *)malloc(sizeof(int) * k);
+	for (int i = 0; i < k; i++)
+		profit[i] = 0;
+	int * hold = (int *)malloc(sizeof(int) * k);
+	for (int i = 0; i < k; i++)
+		hold[i] = INT_MIN;
+	for (int i = 0; i < pricesSize; i++) {
+		for (int j = k - 1; j > 0; j--) {
+			profit[j] = max(profit[j], hold[j] + prices[i]);
+			hold[j] = max(hold[j], profit[j - 1] - prices[i]);
+		}
+		profit[0] = max(profit[0], hold[0] + prices[i]);
+		hold[0] = max(hold[0], -prices[i]);
+	}
+	int result = 0;
+	for (int p = 0; p < k; p++)
+		result = result > profit[p] ? result : profit[p];
+	free(profit);
+	free(hold);
+	return result;
 }

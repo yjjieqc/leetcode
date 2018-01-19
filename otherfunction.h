@@ -40,3 +40,19 @@ int factorial(int a) {
 	else
 		return factorial(a - 1)*a;
 }
+
+
+int firstBadVersion(int n) {
+	int left, right;
+	while (left<right) {
+		int mid = (left + right) / 2;
+		if (isBadVersion(mid)) {
+			if (isBadVersion(mid - 1))
+				right = mid;
+			else
+				return mid;
+		}
+		else
+			left = mid + 1;
+	}
+}
