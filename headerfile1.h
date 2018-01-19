@@ -47,6 +47,39 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
 	}
 }
 
+//10. Regular Expression Matching
+bool ismatch(char* s, char* p) {
+	if (s == NULL || p == NULL)
+		return false;
+	int m = strlen(s), n = strlen(p);
+	bool ** dp = (bool **)malloc((m + 1) * sizeof(bool *));
+	for (int i = 0; i < m + 1; i++) {
+		dp[i] = (bool *)malloc((n + 1) * sizeof(bool));
+		memset(dp[i], false, n + 1);
+	}
+	dp[0][0] = true;
+	for (int i = 0; i < n; i++)
+		if (p[i] == '*' && dp[0][i - 1])
+			dp[0][i + 1] = true;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			if (p[j] == '.' || p[j] == s[i])
+				dp[i + 1][j + 1] = dp[i][j];
+			else if (p[j] == '*') {
+				if (p[j - 1] != s[i] && p[j - 1] != '.')
+					dp[i + 1][j + 1] = dp[i + 1][j - 1];
+				else
+					dp[i + 1][j + 1] = (dp[i + 1][j] || dp[i][j + 1]);
+			}
+		}
+	}
+	bool res = dp[m][n];
+	for (int i = 0; i < m + 1; i++)
+		free(dp[i]);
+	free(dp);
+	return res;
+}
+
 // 11. Container With Most Water
 static inline int max(int a, int b) {
 	return a > b ? a : b;
@@ -330,6 +363,18 @@ void nextPermutation(int* nums, int numsSize) {
 	return;
 }
 
+// 33. Search in Rotated Sorted Array
+int search(int* nums, int numsSize, int target) {
+	int i = 0;
+	while (i<numsSize) {
+		if (nums[i] != target)
+			i++;
+		else
+			return i;
+	}
+	return -1;
+}
+
 //int majorityElement1(int* nums, int numsSize) {
 //	int major = nums[0], count = 1;
 //	for (int i = 1; i<numsSize; i++) {
@@ -362,7 +407,7 @@ void nextPermutation(int* nums, int numsSize) {
 
 //42. Trapping Rain Water
 int trap(int* height, int heightSize) {
-	int left = 0, right = height - 1;
+	int left = 0, right = *height - 1;
 	int level = 0;
 	int water = 0;
 	int lower = 0;
