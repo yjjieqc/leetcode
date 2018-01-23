@@ -199,7 +199,7 @@ int threeSumClosest(int* nums, int numsSize, int target) {
 	return result;
 }
 
-//19 Remove Nth Node From End of List
+// 19 Remove Nth Node From End of List
 struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 	/*struct ListNode * front,*prev;
 	front = head;
@@ -232,6 +232,69 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 	}
 	*t1 = (*t1)->next;
 	return head;
+}
+
+// 20. Valid Parentheses
+bool isValid(char* s) {
+	int len = strlen(s);
+	char* temp = (char *)malloc(len * sizeof(char));
+	int index = 0;
+	while (*s) {
+		if (*s == '}' && index > 0)
+			if (temp[index - 1] == '{')
+				index--;
+			else
+				return false;
+		else if (*s == ']' && index > 0)
+			if (temp[index - 1] == '[')
+				index--;
+			else
+				return false;
+		else if (*s == ')' && index > 0)
+			if (temp[index - 1] == '(')
+				index--;
+			else
+				return false;
+		else
+			temp[index++] = (*s);
+		s++;
+	}
+	free(temp);
+	return index == 0;
+}
+
+// 22. Generate Parentheses !!OUT TIME LIMIT
+char** generateParenthesis(int n, int* returnSize) {
+	*returnSize = factorial(2 * n) / (factorial(n + 1) * factorial(n));
+	char ** res = (char **)malloc((*returnSize) * sizeof(char *));
+	for (int i = 0; i < (*returnSize); i++) {
+		res[i] = (char *)malloc((2 * n + 1) * sizeof(char));
+	}
+	int index = 0, end = 0;
+	char * temp = (char *)malloc((2 * n + 1) * sizeof(char));
+	temp[2 * n] = '\0';
+	addpare(res, temp, n, 0, n, &index, &end);
+	free(temp);
+	return res;
+}
+
+void addpare(char ** res, char * ele, int lp, int rp, int n, int * index, int *end) {
+	if (lp == 0 && rp == 0) {
+		res[*index] = (char*)memcpy(res[*index], ele, 2 * n + 1);
+		res[*index][2 * n] = '\0';
+		(*index)++;
+		return;
+	}
+	if (rp > 0) {
+		ele[(*end)++] = ')';
+		addpare(res, ele, lp, rp - 1, n, index, end);
+		(*end)--;
+	}
+	if (lp > 0) {
+		ele[(*end)++] = '(';
+		addpare(res, ele, lp - 1, rp + 1, n, index, end);
+		(*end)--;
+	}
 }
 
 // 24. Swap Nodes in Pairs
@@ -329,7 +392,7 @@ int removeDuplicates(int* nums, int numsSize) {
 	return index1 + 1;
 }
 
-//27. Remove Element
+// 27. Remove Element
 int removeElement(int* nums, int numsSize, int val) {
 	int index1 = 0;
 	int index2 = 0;
@@ -361,6 +424,23 @@ void nextPermutation(int* nums, int numsSize) {
 	}
 	qsort(nums, numsSize, sizeof(int), cmp);
 	return;
+}
+
+// 32. Longest Valid Parentheses
+int longestValidParentheses(char* s) {
+	int n = strlen(s), maxlen = 0;
+	int * len = (int *)malloc(n * sizeof(int));
+	memset(len, 0, sizeof(int) * n);
+	for (int i = 1; i < n; i++) {
+		if (s[i] == ')'  && s[i - len[i - 1] - 1] == '(')
+			if (i - len[i - 1] - 1 > 0)
+				len[i] = len[i - 1] + 2 + len[i - len[i - 1] - 2];
+			else
+				len[i] = len[i - 1] + 2;
+		printf("len[%d] = %d\n", i, len[i]);
+		maxlen = maxlen > len[i] ? maxlen : len[i];
+	}
+	return maxlen;
 }
 
 // 33. Search in Rotated Sorted Array
