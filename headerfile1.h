@@ -500,6 +500,32 @@ int trap(int* height, int heightSize) {
 	return water;
 }
 
+// 44. Wildcard Matching
+bool isMatch(string s, string p) {
+	int indexs = 0, indexp = 0, sinter = 0, star = -1;
+	while (indexs < s.length()) {
+		if (s[indexs] == p[indexp] || p[indexp] == '?') {
+			indexs++;
+			indexp++;
+			continue;
+		}
+		if (p[indexp] == '*') {
+			star = indexp++;
+			sinter = indexs;
+			continue;
+		}
+		if (star != -1) {
+			indexp = star + 1;
+			indexs = sinter++;
+			continue;
+		}
+		return false;
+	}
+	while (p[indexp] == '*')
+		indexp++;
+	return (indexp == p.length());
+}
+
 // 45 th
 int jump(int* nums, int numsSize) {
 	int index = 0;			//jump pointer

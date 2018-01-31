@@ -14,19 +14,16 @@
 
 
 
+
+
+
+
 int main()
 {
-	char ** c;
-	int * count;
-	c = generateParenthesis(6, count);
-	for (int i = 0; i < *count; i++) {
-		printf("[");
-		for (int j = 0; j < 12; j++) {
-			printf("%c", c[i][j]);
-		}
-		printf("]\n");
-	}
-	free(c);
+	char s = 'a';
+	char t = '\n';
+	printf("char s %s a alpha!\n", isalpha(s) ? "is" : "is not");
+	printf("char t %s a alpha!\n", isalpha(t) ? "is" : "is not");
 #if debug
 
 #endif
