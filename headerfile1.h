@@ -14,6 +14,23 @@ struct ListNode {
     struct ListNode *next;
 };
 
+// 
+class TwoNumAddSolution {
+public:
+	ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+		ListNode preHead(0), *p = &preHead;
+		int extra = 0;
+		while (l1 || l2 || extra) {
+			int sum = (l1 ? l1->val : 0) + (l2 ? l2->val : 0) + extra;
+			extra = sum / 10;
+			p->next = new ListNode(sum % 10);
+			p = p->next;
+			l1 = l1 ? l1->next : l1;
+			l2 = l2 ? l2->next : l2;
+		}
+		return preHead.next;
+	}
+};
 
 // 4. Median of Two Sorted Arrays
 double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
@@ -47,6 +64,19 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
 	}
 }
 
+// 8. String to Integer (atoi)
+int myAtoi(string str) {
+	long long res = 0;
+	int flag = 1;
+	for (int i = 0; i < str.size();) {
+		i = str.find_first_not_of(' ');
+		if (str[i] == '-' || str[i] == '+')
+			flag = (str[i++] == '-') ? -1 : 1;
+		while (i < str.size() && str[i] >= '0' && str[i] <= '9') {
+			res = res * 10 + (str[i++] - '0');
+		}
+	}
+	return (res > INT_MAX || res < INT_MIN) ? 0 : (int)res;
 //10. Regular Expression Matching
 bool ismatch(char* s, char* p) {
 	if (s == NULL || p == NULL)

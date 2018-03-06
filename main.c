@@ -12,21 +12,17 @@
 //#include "headerfile7.h"
 #define debug 1
 
+typedef char * (*GET_VER)();
+typedef struct {
+	GET_VER getVersion;
+}version;
 
+char * mygetver() {
+	return "1.01";
+}
 
-
-
-
-
-int main()
-{
-	char s = 'a';
-	char t = '\n';
-	printf("char s %s a alpha!\n", isalpha(s) ? "is" : "is not");
-	printf("char t %s a alpha!\n", isalpha(t) ? "is" : "is not");
-#if debug
-
-#endif
-	system("pause");
-	return 0;
+int main(int argc, char *argv[]) {
+	version ver;
+	ver.getVersion = &mygetver;
+	printf("%s", ver.getVersion());
 }
