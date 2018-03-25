@@ -1,9 +1,11 @@
 .vs
 bin/
 obj/
+Debug/
 readme/
 leetcode.vcxproj
 leetcode.vcxproj.user
+leetcode.vcxproj.filters
 leetcode
 leetcode.sln
 *.json
