@@ -2,7 +2,8 @@
 bin/
 obj/
 readme/
-Debug/
-*.vcxproj
-*.vcxproj.*
-*.sln
+leetcode.vcxproj
+leetcode.vcxproj.user
+leetcode
+leetcode.sln
+*.json

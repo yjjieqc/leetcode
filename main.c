@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <limits.h>
-//#include "uthash.h"
+#include <stdbool.h>
 //#include "otherfunction.h"
 //#include "headerfile1.h"
 //#include "headerfile2.h"
@@ -12,20 +12,19 @@
 //#include "headerfile7.h"
 #define debug 1
 
-bool isMatch(char* s, char* p) {
-	int i = 0, j = 0;
-	for (; s[i] != '\0'; i++) {
 
-	}
-}
+
+
 
 
 
 int main()
 {
-	int a[] = { 1,4,2,5,7,2,9 };
+	char s = 'a';
+	char t = '\n';
+	printf("char s %s a alpha!\n", isalpha(s) ? "is" : "is not");
+	printf("char t %s a alpha!\n", isalpha(t) ? "is" : "is not");
 #if debug
-
 
 #endif
 	system("pause");

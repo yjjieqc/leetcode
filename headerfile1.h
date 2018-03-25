@@ -47,6 +47,39 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
 	}
 }
 
+//10. Regular Expression Matching
+bool ismatch(char* s, char* p) {
+	if (s == NULL || p == NULL)
+		return false;
+	int m = strlen(s), n = strlen(p);
+	bool ** dp = (bool **)malloc((m + 1) * sizeof(bool *));
+	for (int i = 0; i < m + 1; i++) {
+		dp[i] = (bool *)malloc((n + 1) * sizeof(bool));
+		memset(dp[i], false, n + 1);
+	}
+	dp[0][0] = true;
+	for (int i = 0; i < n; i++)
+		if (p[i] == '*' && dp[0][i - 1])
+			dp[0][i + 1] = true;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			if (p[j] == '.' || p[j] == s[i])
+				dp[i + 1][j + 1] = dp[i][j];
+			else if (p[j] == '*') {
+				if (p[j - 1] != s[i] && p[j - 1] != '.')
+					dp[i + 1][j + 1] = dp[i + 1][j - 1];
+				else
+					dp[i + 1][j + 1] = (dp[i + 1][j] || dp[i][j + 1]);
+			}
+		}
+	}
+	bool res = dp[m][n];
+	for (int i = 0; i < m + 1; i++)
+		free(dp[i]);
+	free(dp);
+	return res;
+}
+
 // 11. Container With Most Water
 static inline int max(int a, int b) {
 	return a > b ? a : b;
@@ -201,6 +234,69 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
 	return head;
 }
 
+// 20. Valid Parentheses
+bool isValid(char* s) {
+	int len = strlen(s);
+	char* temp = (char *)malloc(len * sizeof(char));
+	int index = 0;
+	while (*s) {
+		if (*s == '}' && index > 0)
+			if (temp[index - 1] == '{')
+				index--;
+			else
+				return false;
+		else if (*s == ']' && index > 0)
+			if (temp[index - 1] == '[')
+				index--;
+			else
+				return false;
+		else if (*s == ')' && index > 0)
+			if (temp[index - 1] == '(')
+				index--;
+			else
+				return false;
+		else
+			temp[index++] = (*s);
+		s++;
+	}
+	free(temp);
+	return index == 0;
+}
+
+// 22. Generate Parentheses !!OUT TIME LIMIT
+char** generateParenthesis(int n, int* returnSize) {
+	*returnSize = factorial(2 * n) / (factorial(n + 1) * factorial(n));
+	char ** res = (char **)malloc((*returnSize) * sizeof(char *));
+	for (int i = 0; i < (*returnSize); i++) {
+		res[i] = (char *)malloc((2 * n + 1) * sizeof(char));
+	}
+	int index = 0, end = 0;
+	char * temp = (char *)malloc((2 * n + 1) * sizeof(char));
+	temp[2 * n] = '\0';
+	addpare(res, temp, n, 0, n, &index, &end);
+	free(temp);
+	return res;
+}
+
+void addpare(char ** res, char * ele, int lp, int rp, int n, int * index, int *end) {
+	if (lp == 0 && rp == 0) {
+		res[*index] = (char*)memcpy(res[*index], ele, 2 * n + 1);
+		res[*index][2 * n] = '\0';
+		(*index)++;
+		return;
+	}
+	if (rp > 0) {
+		ele[(*end)++] = ')';
+		addpare(res, ele, lp, rp - 1, n, index, end);
+		(*end)--;
+	}
+	if (lp > 0) {
+		ele[(*end)++] = '(';
+		addpare(res, ele, lp - 1, rp + 1, n, index, end);
+		(*end)--;
+	}
+}
+
 // 24. Swap Nodes in Pairs
 struct ListNode* swapPairs(struct ListNode* head) {
 	struct ListNode * current, *behind, *front;
@@ -330,6 +426,23 @@ void nextPermutation(int* nums, int numsSize) {
 	return;
 }
 
+// 32. Longest Valid Parentheses
+int longestValidParentheses(char* s) {
+	int n = strlen(s), maxlen = 0;
+	int * len = (int *)malloc(n * sizeof(int));
+	memset(len, 0, sizeof(int) * n);
+	for (int i = 1; i < n; i++) {
+		if (s[i] == ')'  && s[i - len[i - 1] - 1] == '(')
+			if (i - len[i - 1] - 1 > 0)
+				len[i] = len[i - 1] + 2 + len[i - len[i - 1] - 2];
+			else
+				len[i] = len[i - 1] + 2;
+		printf("len[%d] = %d\n", i, len[i]);
+		maxlen = maxlen > len[i] ? maxlen : len[i];
+	}
+	return maxlen;
+}
+
 // 33. Search in Rotated Sorted Array
 int search(int* nums, int numsSize, int target) {
 	int i = 0;
@@ -340,62 +453,6 @@ int search(int* nums, int numsSize, int target) {
 			return i;
 	}
 	return -1;
-}
-
-// 34. Search for a Range
-int* searchRange(int* nums, int numsSize, int target, int* returnSize) {
-	*returnSize = 2;
-	int *result = (int*)calloc(2, sizeof(int));
-	result[0] = result[1] = -1;
-	int left = 0;
-	int right = numsSize - 1;
-	int m, flag;
-	if (numsSize == 0)
-		return result;
-	while (left <= right)
-	{
-		m = (left + right) / 2;
-		if (left == right)
-			break;
-		if (nums[m] < target)
-			left = m + 1;
-		else
-			right = m;
-	}
-	if (target == nums[m])
-		result[0] = m;
-	else
-		return result;
-	for (left = m, right = numsSize - 1; left <= right;)
-	{
-		m = (left + right) / 2;
-		flag = (left + right) % 2;
-		if (flag)
-			++m;
-		if (left == right)
-			break;
-		if (nums[m] > target)
-			right = m - 1;
-		else
-			left = m;
-	}
-	result[1] = m;
-	return result;
-}
-
-// 35. Search Insert Position
-int searchInsert(int* nums, int numsSize, int target) {
-	int left = 0, right = numsSize - 1;
-	while (left <= right) {
-		int mid = (left + right) / 2;
-		if (nums[mid] > target)
-			right = mid - 1;
-		else if (nums[mid] < target)
-			left = mid + 1;
-		else
-			return mid;
-	}
-	return left;
 }
 
 //int majorityElement1(int* nums, int numsSize) {
@@ -441,6 +498,32 @@ int trap(int* height, int heightSize) {
 		water += level - lower;
 	}
 	return water;
+}
+
+// 44. Wildcard Matching
+bool isMatch(string s, string p) {
+	int indexs = 0, indexp = 0, sinter = 0, star = -1;
+	while (indexs < s.length()) {
+		if (s[indexs] == p[indexp] || p[indexp] == '?') {
+			indexs++;
+			indexp++;
+			continue;
+		}
+		if (p[indexp] == '*') {
+			star = indexp++;
+			sinter = indexs;
+			continue;
+		}
+		if (star != -1) {
+			indexp = star + 1;
+			indexs = sinter++;
+			continue;
+		}
+		return false;
+	}
+	while (p[indexp] == '*')
+		indexp++;
+	return (indexp == p.length());
 }
 
 // 45 th
@@ -530,41 +613,6 @@ int** permuteUnique(int* nums, int numsSize, int* returnSize) {
 	}
 	*returnSize = size;
 	return result;
-}
-
-// 48. Rotate Image
-void rotate(int** matrix, int matrixRowSize, int matrixColSize) {
-	int i, j, init;
-	if (matrixRowSize % 2) {
-		i = matrixRowSize / 2;
-		j = init = i + 1;
-	}
-	else {
-		i = matrixRowSize / 2 - 1;
-		j = init = matrixRowSize / 2;
-	}
-	for (; i >= 0; i--) {
-		for (j = init; j < matrixColSize; j++) {
-			if (i == j)
-				continue;
-			int temp = matrix[i][j];
-			matrix[i][j] = matrix[matrixRowSize - 1 - j][i];
-			matrix[matrixRowSize - 1 - j][i] = matrix[matrixRowSize - 1 - i][matrixRowSize - 1 - j];
-			matrix[matrixRowSize - 1 - i][matrixRowSize - 1 - j] = matrix[j][matrixRowSize - 1 - i];
-			matrix[j][matrixRowSize - 1 - i] = temp;
-		}
-	}
-}
-
-// 53. Maximum Subarray
-int maxSubArray(int* nums, int numsSize) {
-	int max = 0, sum = 0;
-	for (int i = 0; i < numsSize; i++) {
-		sum += nums[i];
-		max = max > sum ? max : sum;
-		sum = sum > 0 ? sum : 0;
-	}
-	return max;
 }
 
 // 60. Permutation Sequence
