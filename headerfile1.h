@@ -64,6 +64,31 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
 	}
 }
 
+// 5. Longest Palindromic Substring
+string longestPalindrome(string s) {
+	if (s.size() <= 1)
+		return s;
+	int start = 0, max_len = 1;
+	for (int i = 0; i < s.size();) {
+		if (s.size() - i <= max_len / 2)
+			break;
+		int j = i, k = i;
+		while (k < s.size() - 1 && s[k + 1] == s[k])
+			++k;
+		i = k + 1;
+		while (k < s.size() - 1 && j >0 && s[k + 1] == s[j - 1]) {
+			++k;
+			--j;
+		}
+		int new_len = k - j + 1;
+		if (new_len > max_len) {
+			start = j;
+			max_len = new_len;
+		}
+	}
+	return s.substr(start, max_len);
+}
+
 // 8. String to Integer (atoi)
 int myAtoi(string str) {
 	long long res = 0;
@@ -77,7 +102,7 @@ int myAtoi(string str) {
 		}
 	}
 	return (res > INT_MAX || res < INT_MIN) ? 0 : (int)res;
-//10. Regular Expression Matching
+// 10. Regular Expression Matching
 bool ismatch(char* s, char* p) {
 	if (s == NULL || p == NULL)
 		return false;

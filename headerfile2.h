@@ -146,6 +146,38 @@ struct RandomListNode *copyRandomList(struct RandomListNode *head) {
 	return copyhead;
 }
 
+// 148. Sort List
+ListNode *sortList(ListNode *head) {
+	if (head == NULL || head->next == NULL) {
+		return head;
+	}
+	ListNode *fast = head->next, *slow = head;
+	while (fast != NULL&&fast->next != NULL) {
+		fast = fast->next->next;
+		slow = slow->next;
+	}
+	ListNode* head2 = slow->next;
+	slow->next = NULL;
+	ListNode *p1 = sortList(head);
+	ListNode *p2 = sortList(head2);
+	ListNode *p = merge(p1, p2);
+	return p;
+}
+ListNode* merge(ListNode* p1, ListNode* p2) {
+	if (p1 == NULL) return p2;
+	if (p2 == NULL) return p1;
+	ListNode* phead;
+	if (p1->val<p2->val) {
+		phead = p1;
+		phead->next = merge(p1->next, p2);
+	}
+	else {
+		phead = p2;
+		phead->next = merge(p1, p2->next);
+	}
+	return phead;
+}
+
 // 152. Maximum Product Subarray
 int maxProduct(int* nums, int numsSize) {
 	int r = nums[0];
