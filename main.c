@@ -1,69 +1,98 @@
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <stddef.h>
+#include <math.h>
+#include <limits.h>
+#include <stdbool.h>
+//#include "otherfunction.h"
+//#include "headerfile1.h"
+//#include "headerfile2.h"
+//#include "headerfile3.h"
+//#include "headerfile5.h"
+//#include "headerfile7.h"
+#define debug 1
 
-struct list_head {
-	struct list_head *prev, *next;
-};
 
-struct student {
-	int age;
-	char name[20];
-	struct list_head head;
-};
+/* Definition for singly-linked list. */
+typedef struct ListNode {
+	int val;
+	struct ListNode *next;
+}node;
 
-void INIT_LIST_HEAD(struct list_head *head)
-{
-	head->prev = head;
-	head->next = head;
+struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2) {
+	node *res = (node*)malloc(sizeof(node));
+	res->val = INT_MIN;
+	node *temp;
+	while (l1 && l2) {
+		if (l1->val < l2->val) {
+			temp = l1->next;
+			res->next = l1;
+			l1 = l1->next;
+		}
+		else {
+			res->next = l2;
+			l2 = l2->next;
+		}
+		while (l1) {
+			res->next = l1;
+			l1 = l1->next;
+		}
+		while (l2) {
+			res->next = l2;
+			l2 = l2->next;
+		}
+	}
+	return res->next;
 }
 
-void __list_add(struct list_head *new, struct list_head *prev, struct list_head
-	*next)
-{
-
-	prev->next = new;
-	new->prev = prev;
-	new->next = next;
-	next->prev = new;
+void build(node * p, node *q) {
+	//node *p = head1, *q = head2;
+	for (int i = 1; i < 4; i++) {
+		node * new_node1 = (node*)malloc(sizeof(node));
+		node * new_node2 = (node*)malloc(sizeof(node));
+		new_node1->val = 2 * i;
+		new_node2->val = 2 * i + 1;
+		p->next = new_node1;
+		q->next = new_node2;
+		p = p->next;
+		q = q->next;
+	}
 }
 
-void list_add(struct list_head *new, struct list_head *head)
-{
-	__list_add(new, head->prev, head->next);
+void delete_node(node *head) {
+	if (head)
+		delete_node(head->next);
+	else
+		return;
+	free(head);
 }
 
-#define list_for_each(p,head)  for((p) = (head)->next;(p)!=(head);(p)=(p)->next)
+void print_list(node *head) {
+	while (head) {
+		printf("  %d", head->val);
+		head = head->next;
+	}
+	printf("\n");
+}
 
-#define offset(type,member) (size_t)&(((type *)0)->member)
-
-#define container_of(ptr,type,member) \ 
-({const typeof(((type *)0)->member) *_mptr = (ptr); \ 
-(type *)((char *)(_mptr) - offset(type,member));})
-
-#define list_for_entry(ptr,type,member)        container_of(ptr,type,member)
-
-int main(int argc, char *argv[])
+int main()
 {
-	struct list_head head;
-	struct list_head *pHead;
+	node *l1 = (node *)malloc(sizeof(node));
+	node *l2 = (node *)malloc(sizeof(node));
+	printf("%p\n", l1);
+	build(l1, l2);
+	node *temp = l1;
+	for (int i = 1; i < 4; i++) {
+		printf("%d ", temp->val);
+		temp = temp->next;
+	}
+	printf(l1);
+	printf(l2);
+#if debug
 
-	struct student stu1;
-	struct student stu2 = {16, "Lili"};
-	struct student *stu_entry;
-
-	INIT_LIST_HEAD(&head);
-
-	stu1.age = 17;
-	memcpy(stu1.name, "lisi", strlen("lisi"));
-
-	list_add(&stu1.head, &head);
-	list_add(&stu2.head, &head);
-
-	int set = offset(struct student, head);
-	int * num = (int *)malloc(sizeof(int) * 4);
-	printf("%d\n", sizeof(num)/sizeof(num[0]));
-
+#endif
+	delete_node(l1);
+	delete_node(l2);
+	system("pause");
 	return 0;
 }
