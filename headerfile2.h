@@ -146,6 +146,42 @@ struct RandomListNode *copyRandomList(struct RandomListNode *head) {
 	return copyhead;
 }
 
+// 147. Insertion Sort List
+ListNode* insertionSortList(ListNode* head) {
+	ListNode *pend = head;
+	ListNode *cur;
+	if (head == NULL || pend->next == NULL)
+		return head;
+	else
+		cur = pend->next;
+	ListNode *phead = new ListNode(INT_MIN);
+	phead->next = head;
+
+	while (cur) {
+		if (cur->val < phead->next->val) {
+			pend->next = cur->next;
+			cur->next = phead->next;
+			phead->next = cur;
+		}
+		else if (cur->val >= pend->val) {
+			pend = cur;
+		}
+		else {
+			ListNode* prev = phead->next;
+			while (prev->next->val < cur->val) {
+				prev = prev->next;
+			}
+			pend->next = cur->next;
+			cur->next = prev->next;
+			prev->next = cur;
+		}
+		cur = pend->next;
+	}
+	head = phead->next;
+	free(phead);
+	return head;
+}
+
 // 148. Sort List
 ListNode *sortList(ListNode *head) {
 	if (head == NULL || head->next == NULL) {
@@ -163,6 +199,7 @@ ListNode *sortList(ListNode *head) {
 	ListNode *p = merge(p1, p2);
 	return p;
 }
+
 ListNode* merge(ListNode* p1, ListNode* p2) {
 	if (p1 == NULL) return p2;
 	if (p2 == NULL) return p1;
