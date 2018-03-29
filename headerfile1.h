@@ -795,6 +795,26 @@ bislager:
 	return newresult;
 }
 
+// 75. Sort Colors
+void sortColors(vector<int>& nums) {
+	int i = 0, j = nums.size() - 1;
+	while (i < j) {
+		while (i < j && nums[i] == 0)
+			i++;
+		while (i < j&& nums[j] != 0)
+			j--;
+		swap(nums[i], nums[j]);
+	}
+	j = nums.size() - 1;
+	while (i < j) {
+		while (i < j && nums[i] == 1)
+			i++;
+		while (i < j&& nums[j] != 1)
+			j--;
+		swap(nums[i], nums[j]);
+	}
+}
+
 // 88 th
 void merge(int* nums1, int m, int* nums2, int n) {
 	int index1 = m - 1;
