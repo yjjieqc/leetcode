@@ -670,6 +670,22 @@ int** permuteUnique(int* nums, int numsSize, int* returnSize) {
 	return result;
 }
 
+// 49. Group Anagrams
+vector<vector<string> >groupAnagrams(vector<string>& strs) {
+	unordered_map<string, multiset<string>> mp;
+	for (string s : strs) {
+		string t = s;
+		sort(t.begin(), t.end());
+		mp[t].insert(s);
+	}
+	vector<vector<string>> anagrams;
+	for (auto m : mp) {
+		vector<string> anagram(m.second.begin(), m.second.end());
+		anagrams.push_back(anagram);
+	}
+	return anagrams;
+}
+
 // 60. Permutation Sequence
 char* getPermutation(int n, int k) {
 	int * nums = (int *)malloc(sizeof(int)*n);
