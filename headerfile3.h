@@ -76,6 +76,23 @@ bool isPalindrome(struct ListNode* head) {
 	return true;
 }
 
+// 242. Valid Anagram
+bool isAnagram(string s, string t) {
+	if (s.size() != t.size())
+		return false;
+	int len = s.size();
+	map<char, int> res;
+	int i = 0;
+	for (i = 0; i <len; i++) {
+		res[s[i]]++;
+		res[t[i]]--;
+	}
+	for (auto check : res)
+		if (check.second)
+			return false;
+	return true;
+}
+
 // 283. Move Zeroes
 void moveZeroes(int* nums, int numsSize) {
 	int index1 = 0;
